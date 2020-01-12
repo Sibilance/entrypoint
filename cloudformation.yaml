@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    18c59255-72ea-461c-86ab-173b3e6541b9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 210
+        'y': 180
+      z: 1
+      embeds: []
+      dependson:
+        - d1a4d204-c068-48b8-b8e4-2c2d9e0c398a
+    d1a4d204-c068-48b8-b8e4-2c2d9e0c398a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 300
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 18c59255-72ea-461c-86ab-173b3e6541b9
+    16106054-6c40-4be0-8a32-354d5c32b6c4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 330
+        'y': 120
+      z: 1
+      embeds: []
+      iscontainedinside:
+        - acb97be2-a9ea-42e6-bab8-8241a16b6f56
+    acb97be2-a9ea-42e6-bab8-8241a16b6f56:
+      size:
+        width: 150
+        height: 150
+      position:
+        x: 30
+        'y': 60
+      z: 1
+      embeds: []
+    63c1772e-9c74-4a89-b427-ac2343bc3308:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 420
+        'y': 90
+      z: 1
+      embeds: []
+Resources:
+  ASASG51T8J:
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
+    Properties:
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandBaseCapacity: 1
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref EC2LC1
+            Version:
+              'Fn::GetAtt':
+              - EC2LC1
+              - LatestVersionNumber
+      DesiredCapacity: 1
+      MaxSize: 1
+      MinSize: 1
+      AvailabilityZones:
+        'Fn::GetAZs': ''
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 18c59255-72ea-461c-86ab-173b3e6541b9
+  ASSP1OXMM:
+    Type: 'AWS::AutoScaling::ScalingPolicy'
+    Properties:
+      AutoScalingGroupName: !Ref ASASG51T8J
+      AdjustmentType: ChangeInCapacity
+      PolicyType: SimpleScaling
+      Cooldown: 60
+      ScalingAdjustment: 1
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d1a4d204-c068-48b8-b8e4-2c2d9e0c398a
+  EC2LC1:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-062f7200baf2fa504
+        InstanceType: t3a.nano
+        SecurityGroupIds:
+          - 'Fn::GetAtt':
+            - EC2SG3FU4V
+            - GroupId
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 63c1772e-9c74-4a89-b427-ac2343bc3308
+  EC2SG3FU4V:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Entrypoint Default
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+        - IpProtocol: tcp
+          CidrIpv6: '::/0'
+          FromPort: 80
+          ToPort: 80
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 16106054-6c40-4be0-8a32-354d5c32b6c4
